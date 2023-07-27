@@ -22,19 +22,15 @@
             {
                 "command": "etb2.createNotebook",
                 "title": "Create Notebook to run ETB2"
-            },
-            {
-              "command": "welcome-view-content-sample.hello",
-              "title": "Hello World!"
             }
         ],
         "notebooks": [
           {
             "type": "etb2-notebook",
-            "displayName": "Sample Notebook",
+            "displayName": "ETB2 Notebook",
             "selector": [
               {
-                "filenamePattern": "*.sample-etb2-notebook"
+                "filenamePattern": "*.etb2-notebook"
               }
             ]
           }
