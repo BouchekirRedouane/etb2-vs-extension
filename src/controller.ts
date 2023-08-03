@@ -71,7 +71,7 @@ export class SampleKernel {
 			  execution.token.onCancellationRequested(_ => this.abortExecution(abortController)); 
 	  
 			  execution.replaceOutput([new vscode.NotebookCellOutput([
-				vscode.NotebookCellOutputItem.text(await executeETB2Command(cell.document.getText(), cell.notebook.uri.toString(), abortController))
+				vscode.NotebookCellOutputItem.text(await executeETB2Command(cell.document.getText(), cell.notebook.uri.toString(), abortController, execution))
 			  ])]);
 			  execution.end(true, Date.now());
             } catch (err) {
@@ -93,70 +93,11 @@ export class SampleKernel {
 }
 
 
-
-
-
-async function executeETB2Command0(
-	etb2Command: string,
-	workingDirectory: string,
-	abortController: AbortController
-  ): Promise<string> {
-	const pathWithoutFilePrefix = workingDirectory.replace('file:///', '');
-	const pathWithoutFinalPart = pathWithoutFilePrefix.replace(/\/[^/]*$/, '');
-	// Escape double quotes with backslashes
-	const escapedSpecialCar = etb2Command.replace(/"/g, '\\"'); 
-	const command = `/bin/bash -i -l -c "cd /${pathWithoutFinalPart} && ${escapedSpecialCar} 2>&1"`;
-	
-	vscode.window.showInformationMessage('Running ETB2 command:  ' + etb2Command);
-  
-	return new Promise<string>((resolve, reject) => {
-	  const childProcess = cp.spawn(command, [], {
-		shell: true,
-		stdio: 'pipe',
-	  });
-  
-	  let result = '';
-
-	  // Listen for the 'data' event to capture the output of the child process
-	  childProcess.stdout?.on('data', (data) => {
-		result += data.toString();
-	  });
-  
-	  // Listen for the 'error' event to handle any errors that occur during child process execution
-	  childProcess.on('error', (error) => {
-		vscode.window.showInformationMessage('Error occurred:' + error.message);
-		reject(error);
-	  });
-  
-	  // Listen for the 'abort' event from the AbortController to manually kill the child process
-	  abortController.signal.addEventListener('abort', () => {
-		if (childProcess.pid) {
-		  process.kill(childProcess.pid, 'SIGABRT');
-		  vscode.window.showInformationMessage("kill PID: "+childProcess.pid);
-		}
-	  });
-  
-	  // Listen for the 'exit' event to resolve or reject the promise when the child process is done
-	  childProcess.on('exit', (code, signal) => {
-		if (signal === 'SIGABRT') {
-		  reject(new Error('Command execution was aborted.'));
-		} else if (code === 0) {
-		  resolve(result.trim());
-		} else {
-		  reject(new Error(`Command execution failed with exit code ${code}.`));
-		}
-	  });
-	});
-  }
-
-
-
-
-//Old version of ETB2 command execution 
 async function executeETB2Command(
 	etb2Command: string,
 	workingDirectory: string,
-	abortController: AbortController
+	abortController: AbortController,
+	execution: vscode.NotebookCellExecution 
   ): Promise<string> {
 
 	const pathWithoutFilePrefix = workingDirectory.replace('file:///', '');
@@ -176,10 +117,18 @@ async function executeETB2Command(
 		stdio: 'pipe',
 	  });
   
-	  // Listen for the 'data' event to capture the output of the child process
 	  childProcess.stdout?.on('data', (data) => {
-		result += data.toString();
+		const output = data.toString();
+		result += output;
+  
+		// Create a new NotebookCellOutput with the output data and send it to the cell execution
+		const outputItems: vscode.NotebookCellOutputItem[] = [
+		  vscode.NotebookCellOutputItem.text(result, 'text/plain'),
+		];
+		const outputOutput = new vscode.NotebookCellOutput(outputItems);
+		execution.replaceOutput([outputOutput]);
 	  });
+
   
 	  // Listen for the 'error' event to handle any errors that occur during child process execution
 	  childProcess.on('error', (error) => {
@@ -190,14 +139,15 @@ async function executeETB2Command(
 	  // Listen for the 'exit' event to resolve or reject the promise when the child process is done
 	  childProcess.on('exit', (code, signal) => {
 		if (signal === 'SIGABRT') {
-		  reject(new Error('Command execution was aborted.'));
+		  reject(result);
 		} else if (code === 0) {
-		  resolve(result.trim());
+		  resolve(result);
 		} else {
-		  reject(new Error(`Command execution failed with exit code ${code}.`));
+		  reject(new Error(result));
 		}
 	  });
   
+	  // Listen for the 'abort' event from the AbortController to manually kill the child process and its descendants
 	  // Listen for the 'abort' event from the AbortController to manually kill the child process and its descendants
 	  abortController.signal.addEventListener('abort', () => {
 		if (childProcess && childProcess.pid) {
@@ -209,14 +159,21 @@ async function executeETB2Command(
 			  const pids = [childProcess!.pid, ...children.map((child) => child.PID)];
 			  pids.forEach((pid) => {
 				if (pid !== undefined) {
-					process.kill(+pid, 'SIGKILL'); // Use the numeric representation of SIGABRT
-					vscode.window.showInformationMessage('Killed PID: ' + pid);
-				}
-				else
-				{
-					vscode.window.showInformationMessage('Error: PID undefined ' + pid);
+				  process.kill(+pid, 'SIGKILL'); // Use the numeric representation of SIGABRT
+				  vscode.window.showInformationMessage('Killed PID: ' + pid);
+				} else {
+				  vscode.window.showInformationMessage('Error: PID undefined ' + pid);
 				}
 			  });
+  
+			  // Add the "Server interrupt" message to the result
+			  result += '\nETB2 node server interrupted:';
+			  // Create a new NotebookCellOutput with the output data and send it to the cell execution
+			  const outputItems: vscode.NotebookCellOutputItem[] = [
+				vscode.NotebookCellOutputItem.text(result, 'text/plain'),
+			  ];
+			  const outputOutput = new vscode.NotebookCellOutput(outputItems);
+			  execution.replaceOutput([outputOutput]);
 			}
 		  });
 		}
@@ -236,11 +193,11 @@ async function executeETB2Command(
 
 
 
+//In case kill all etb2 run instancies (multiple etb2 node)
+/*
 
   let childProcesses: cp.ChildProcess[] = [];
-  
 
-  //In case kill all etb2 run instancies (multiple etb2 node)
   async function executeETB2CommandOld1(
 	etb2Command: string,
 	workingDirectory: string,
@@ -320,7 +277,7 @@ async function executeETB2Command(
 	});
   }
   
-
+*/
 
 
   

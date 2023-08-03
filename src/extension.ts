@@ -2,9 +2,6 @@ import * as vscode from 'vscode';
 import { SampleKernel } from './controller';
 import { SampleContentSerializer } from './serializer';
 
-import { ExtensionContext, StatusBarAlignment, window, StatusBarItem, Selection, workspace, TextEditor, commands } from 'vscode';
-import { basename } from 'path';
-
 import * as cp from 'child_process';
 
 
@@ -36,19 +33,10 @@ export function activate(context: vscode.ExtensionContext) {
 		const defaultValue = `etb2 -h`;
 		const cell = new vscode.NotebookCellData(vscode.NotebookCellKind.Code, defaultValue, 'shellscript');
 		const data = new vscode.NotebookData([cell]);
-		data.metadata = {
-			custom: {
-				cells: [],
-				metadata: {
-					orig_nbformat: 4
-				},
-				nbformat: 4,
-				nbformat_minor: 2
-			}
-		};
 		const doc = await vscode.workspace.openNotebookDocument(NOTEBOOK_TYPE, data);
 		await vscode.window.showNotebookDocument(doc);
 	}));
+
 
 }
 

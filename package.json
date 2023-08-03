@@ -22,6 +22,10 @@
             {
                 "command": "etb2.createNotebook",
                 "title": "Create Notebook to run ETB2"
+            },
+            {
+              "command": "myExplorer.open",
+              "title": "Open My Explorer"
             }
         ],
         "notebooks": [
@@ -34,31 +38,7 @@
               }
             ]
           }
-        ],
-        "viewsContainers": {
-            "activitybar": [
-              {
-                "id": "package-explorer",       
-                "title": "ETB2 workspace",
-                "icon": "media/etb2-icon.svg"              
-              }
-            ]
-          },
-          "views": {
-            "package-explorer": [               
-              {
-                "id": "package-dependencies",   
-                "name": "Folders",
-                "type": "tree"
-              }
-            ]
-          },
-          "viewsWelcome": [
-            {
-              "view": "workbench.explorer.emptyView",
-              "contents": "You can have paragraphs of text here. You can have [links](https://code.visualstudio.com) to external sources or [internal commands](command:welcome-view-content-sample.hello).\nUse new lines to have new paragraphs.\nPlace a link alone in a paragraph to make it a button\n[Hello](command:welcome-view-content-sample.hello)"
-            }
-          ]
+        ]
       },
     "scripts": {
       "vscode:prepublish": "npm run package",
