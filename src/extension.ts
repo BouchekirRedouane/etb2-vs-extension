@@ -44,8 +44,8 @@ function isETB2Installed(): boolean {
 	
 	try {
 	  cp.execSync('bash -i -c "etb2 --version"', { stdio: 'pipe' }).toString().trim();
-	  //return true;
-	  return false;
+	  return true;
+	  //return false;
 	} catch (error) {
 	  console.log(error);
 	  return false;

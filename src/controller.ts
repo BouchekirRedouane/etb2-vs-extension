@@ -47,7 +47,7 @@ export class SampleKernel {
 			try {
 
 				const errorText = "Error: Please save the etb2 notebook first to specify the working directory.";
-				const formattedErrorText = `<span style="color:#ff0000">Error: </span> ${errorText.substring("Error:".length)}`;
+				const formattedErrorText = `[<span style="color:#FF0000">ERROR</span>] ${errorText.substring("Error:".length)}`;
 				execution.replaceOutput([new vscode.NotebookCellOutput([
 					vscode.NotebookCellOutputItem.text(formattedErrorText, 'text/html')
 				])]);
