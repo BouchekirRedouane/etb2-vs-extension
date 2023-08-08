@@ -31,3 +31,8 @@ VSCode-ETB2 can be installed from the Visual Studio Code Marketplace or from Git
 3. Click on the `...` menu in the title bar, and use `Install from VSIX` to select the downloaded .vsix file. 
 
 <br>
+
+
+
+
+ -- Radouane 
