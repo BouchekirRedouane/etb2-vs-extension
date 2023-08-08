@@ -25,8 +25,8 @@ VSCode-ETB2 can be installed from the Visual Studio Code Marketplace or from Git
 
 
 
-**Manual installation of VSCode-PVS from GitHub**
-1. Download the .vsix file of VSCode-PVS from [github](https://github.com/).
+**Manual installation of VSCode-ETB2 from GitHub**
+1. Download the .vsix file of VSCode-ETB2 from [github](https://github.com/).
 2. Click on the Extensions icon in the Activity Bar 
 3. Click on the `...` menu in the title bar, and use `Install from VSIX` to select the downloaded .vsix file. 
 
