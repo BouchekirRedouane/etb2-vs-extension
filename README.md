@@ -9,7 +9,7 @@ ETB2 is a complete reengineering of the Evidential Tool Bus (ETB) using Java. ET
 
 
 ## Current version
-You can download the current version from here: 
+You can download the current version from here: [here](https://github.com/BouchekirRedouane/etb2-vs-extension/releases/download/untagged-ee27cb47ff65183324ef/etb2-vs-code-0.0.1.vsix)
 
 
 ## Current version
