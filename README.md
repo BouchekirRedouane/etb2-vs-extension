@@ -9,7 +9,7 @@ ETB2 is a complete reengineering of the Evidential Tool Bus (ETB) using Java. ET
 
 
 ## Current version
-You can download the current version from here: [here](https://github.com/BouchekirRedouane/etb2-vs-extension/releases/download/untagged-ee27cb47ff65183324ef/etb2-vs-code-0.0.1.vsix)
+You can download the current version from here: [here](https://github.com/BouchekirRedouane/etb2-vs-extension/releases/download/untagged-ee27cb47ff65183324ef/etb2-vs-code-0.0.1.vsix).
 
 
 
@@ -22,7 +22,7 @@ You can download the current version from here: [here](https://github.com/Bouche
 VSCode-ETB2 can be installed from the Visual Studio Code Marketplace or from GitHub.
 
 **Manual installation of VSCode-ETB2 from GitHub**
-1. Download the .vsix file of VSCode-ETB2 from [github](https://github.com/BouchekirRedouane/etb2-vs-extension/releases/download/untagged-ee27cb47ff65183324ef/etb2-vs-code-0.0.1.vsix).
+1. Download the .vsix file of VSCode-ETB2 here: [here](https://github.com/BouchekirRedouane/etb2-vs-extension/releases/download/untagged-ee27cb47ff65183324ef/etb2-vs-code-0.0.1.vsix).
 2. Click on the Extensions icon in the Activity Bar 
 3. Click on the `...` menu in the title bar, and use `Install from VSIX` to select the downloaded .vsix file. 
 
