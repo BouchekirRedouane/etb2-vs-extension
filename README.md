@@ -1,5 +1,3 @@
-# ETB2-VSCODE README
-
 # VSCode-ETB2: is a vscode extension for Evidential Tool Bus (ETB2).  
 
 ETB2 is a complete reengineering of the Evidential Tool Bus (ETB) using Java. ETB2 is a platform for defining and executing distributed workflows that produce claims supported by evidence. ETB uses Datalog as the workflow scripting language. VSCode-ETB2 is a vscode extension for Evidential Tool Bus (ETB2). It contains etb2-notebooks to assist the user in running the ETB2 commands. 
