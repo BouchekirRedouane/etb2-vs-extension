@@ -19,7 +19,7 @@ You can download the current version from here: [here](https://github.com/Bouche
 - Visual Studio Code (v1.49.0 or greater) https://code.visualstudio.com
 
 ## Installation instructions
-VSCode-ETB2 can be installed from the Visual Studio Code Marketplace or from GitHub.
+VSCode-ETB2 can be installed manually using .vsix file.
 
 **Manual installation of VSCode-ETB2 from GitHub**
 1. Download the .vsix file of VSCode-ETB2 here: [here](https://github.com/BouchekirRedouane/etb2-vs-extension/releases/download/untagged-ee27cb47ff65183324ef/etb2-vs-code-0.0.1.vsix).
@@ -29,6 +29,7 @@ VSCode-ETB2 can be installed from the Visual Studio Code Marketplace or from Git
 <br>
 
 
-
-
- -- Radouane 
+## Commands 
+VSCode-ETB2 commands are:
+- `ETB2` to check if ETB2 is already installed in the host machine. 
+- `Create Notebook to run ETB2` to create a new notebook to run ETB2 commands  
