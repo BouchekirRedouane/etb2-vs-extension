@@ -33,3 +33,5 @@ VSCode-ETB2 can be installed manually using .vsix file.
 VSCode-ETB2 commands are:
 - `ETB2` to check if ETB2 is already installed in the host machine. 
 - `Create Notebook to run ETB2` to create a new notebook to run ETB2 commands  
+
+To run a command click on `Shift`+`Ctrl`+`P`. 
