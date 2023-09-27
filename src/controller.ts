@@ -41,7 +41,7 @@ export class SampleKernel {
 	
 		const execution = this._controller.createNotebookCellExecution(cell);
 		
-		if (cell.notebook.uri.toString().includes("untitled:")) {
+		if (cell.notebook.uri.toString().includes("untitled:") &&  !["etb2 -h", "etb2 --help", "etb2 -v", "etb2 --version"].includes(cell.document.getText().toLowerCase().trim()) ) {
 			execution.executionOrder = ++this._executionOrder;
 			execution.start(Date.now());
 			try {
@@ -103,9 +103,17 @@ async function executeETB2Command(
 	const pathWithoutFilePrefix = workingDirectory.replace('file:///', '');
 	const pathWithoutFinalPart = pathWithoutFilePrefix.replace(/\/[^/]*$/, '');
 	const escapedSpecialCar = etb2Command.replace(/"/g, '\\"'); // Escape double quotes with backslashes
-	const command = `/bin/bash -i -l -c "cd /${pathWithoutFinalPart} && ${escapedSpecialCar} 2>&1"`;
-  
-	vscode.window.showInformationMessage('Running ETB2 command: ' + etb2Command);
+
+	let command: string;
+	if (pathWithoutFinalPart.trim() ==="") {
+		command = `/bin/bash -i -l -c "cd /${pathWithoutFinalPart} && ${escapedSpecialCar} 2>&1"`;
+	} else {
+		command = `/bin/bash -i -l -c "${escapedSpecialCar}"`;
+	}
+
+
+
+	vscode.window.showInformationMessage('Running ETB2 command: ' + command);
   
 	return new Promise<string>((resolve, reject) => {
 	  let result = '';
@@ -148,7 +156,6 @@ async function executeETB2Command(
 	  });
   
 	  // Listen for the 'abort' event from the AbortController to manually kill the child process and its descendants
-	  // Listen for the 'abort' event from the AbortController to manually kill the child process and its descendants
 	  abortController.signal.addEventListener('abort', () => {
 		if (childProcess && childProcess.pid) {
 		  // Terminate the process group (child process and its descendants)
@@ -180,108 +187,3 @@ async function executeETB2Command(
 	  });
 	});
   }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-//In case kill all etb2 run instancies (multiple etb2 node)
-/*
-
-  let childProcesses: cp.ChildProcess[] = [];
-
-  async function executeETB2CommandOld1(
-	etb2Command: string,
-	workingDirectory: string,
-	abortController: AbortController
-  ): Promise<string> {
-	const pathWithoutFilePrefix = workingDirectory.replace('file:///', '');
-	const pathWithoutFinalPart = pathWithoutFilePrefix.replace(/\/[^/]*$/, '');
-	const escapedSpecialCar = etb2Command.replace(/"/g, '\\"'); // Escape double quotes with backslashes
-	const command = `/bin/bash -i -l -c "cd /${pathWithoutFinalPart} && ${escapedSpecialCar} 2>&1"`;
-  
-	vscode.window.showInformationMessage('Running ETB2 command: ' + etb2Command);
-  
-	return new Promise<string>((resolve, reject) => {
-	  let result = '';
-	  let childProcess: cp.ChildProcess | null = null;
-  
-	  childProcess = cp.spawn(command, [], {
-		shell: true,
-		stdio: 'pipe',
-	  });
-  
-	  childProcesses.push(childProcess); // Store the child process in the array
-  
-	  // Listen for the 'data' event to capture the output of the child process
-	  childProcess.stdout?.on('data', (data) => {
-		result += data.toString();
-	  });
-  
-	  // Listen for the 'error' event to handle any errors that occur during child process execution
-	  childProcess.on('error', (error) => {
-		vscode.window.showInformationMessage('Error occurred: ' + error.message);
-		reject(error);
-	  });
-  
-	  // Listen for the 'exit' event to resolve or reject the promise when the child process is done
-	  childProcess.on('exit', (code, signal) => {
-		if (signal === 'SIGABRT') {
-		  reject(new Error('Command execution was aborted.'));
-		} else if (code === 0) {
-		  resolve(result.trim());
-		} else {
-		  reject(new Error(`Command execution failed with exit code ${code}.`));
-		}
-	  });
-  
-	  // Listen for the 'abort' event from the AbortController to manually kill the child process and its descendants
-	  abortController.signal.addEventListener('abort', () => {
-		// Terminate the process group for each command separately
-		const commandPids = new Set<number>();
-		if (childProcesses.length > 0) {
-		  for (const childProc of childProcesses) {
-			if (childProc.pid) {
-			  pstree(childProc.pid, (err, children) => {
-				if (!err) {
-				  const pids = [childProc.pid, ...children.map((child) => child.PID)];
-				  pids.forEach((pid) => {
-					if (pid !== undefined) {
-						process.kill(+pid, 'SIGKILL'); // Use the numeric representation of SIGABRT
-						vscode.window.showInformationMessage('Killed PID: ' + pid);
-					}
-					else
-					{
-						vscode.window.showInformationMessage('Error: PID undefined ' + pid);
-					}
-				  });
-				}
-			  });
-			}
-		  }
-		  commandPids.forEach((pid) => {
-			process.kill(pid, 'SIGKILL');
-			vscode.window.showInformationMessage('Killed PID: ' + pid);
-		  });
-		  childProcesses = []; // Clear the array after termination
-		}
-	  });
-	});
-  }
-  
-*/
-
-
-  
-
-
-
-

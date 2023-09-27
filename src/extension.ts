@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
 		if (isETB2Installed()) {
 			vscode.window.showInformationMessage('ETB2 is installed!');
 		  } else {
-			installETB2();
+			//installETB2();
 			vscode.window.showWarningMessage('ETB2 is not installed. Please install ETB2 to use this extension properly. Please refer to: https://github.com/SRI-CSL/ETB2');
 		}
 	});
